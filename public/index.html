@@ -76,12 +76,10 @@
     .grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      grid-auto-rows: 1fr;
+      /* each row = exactly 1/3 of usable screen height, so 3 rows always fit */
+      grid-auto-rows: calc((100dvh - 44px - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 10px) / 3);
       gap: 5px;
       padding: 5px;
-      /* fill main's height so rows expand to fill screen */
-      min-height: 100%;
-      height: 100%;
     }
 
     /* ── Card ────────────────────────────────────────────── */
@@ -113,7 +111,7 @@
     */
     .card-bg {
       flex: 1;
-      min-height: 55px;
+      min-height: 0;
       border-radius: 7px;
       /* side padding bleeds color left/right of image; bottom padding bleeds below */
       padding: 2px 4px 6px;
