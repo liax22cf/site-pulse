@@ -1,0 +1,16 @@
+{
+  "refreshSeconds": 1800,
+  "timeoutMs": 8000,
+  "sites": [
+    {
+      "name": "My Site",
+      "url": "https://example.com",
+      "expectStatus": [200, 301, 302]
+    },
+    {
+      "name": "Another Site",
+      "url": "https://another-example.com",
+      "expectStatus": [200, 301, 302]
+    }
+  ]
+}
