@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Temporal Control Panel</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<style>
+html, body {
+  margin: 0;
+  padding: 0;
+  background: #0f1115;
+  color: #ffffff;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  height: 100%;
+  overflow: hidden;
+}
+
+.wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  width: 100vw;
+  height: 100vh;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #1c1f26;
+  border: 2px solid #2a2f38;
+}
+
+.label {
+  font-size: 12px;
+  opacity: 0.6;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+
+.value-big {
+  font-size: 34px;
+  font-weight: 600;
+}
+
+.value-medium {
+  font-size: 26px;
+  font-weight: 600;
+}
+
+.red {
+  color: #ff453a;
+}
+</style>
+</head>
+<body>
+
+<div class="wrapper">
+
+  <div class="card">
+    <div class="label">LEFT TODAY</div>
+    <div class="value-big" id="today">--:--:--.---</div>
+  </div>
+
+  <div class="card">
+    <div class="label">MONTH LEFT</div>
+    <div class="value-medium" id="month">--</div>
+  </div>
+
+  <div class="card">
+    <div class="label">YEAR LEFT</div>
+    <div class="value-medium" id="year">--</div>
+  </div>
+
+  <div class="card">
+    <div class="label red">WEEKS LEFT (85y)</div>
+    <div class="value-medium red" id="life">--</div>
+  </div>
+
+</div>
+
+<script>
+const lifeExpectancy = 85;
+const birthYear = 2000; // CHANGE THIS
+
+function format(ms) {
+  if (ms <= 0) return "00:00:00.000";
+
+  const totalSeconds = Math.floor(ms / 1000);
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+  const millis = ms % 1000;
+
+  return (
+    String(hours).padStart(2, '0') + ":" +
+    String(minutes).padStart(2, '0') + ":" +
+    String(seconds).padStart(2, '0') + "." +
+    String(millis).padStart(3, '0')
+  );
+}
+
+function update() {
+  const now = new Date();
+
+  const endOfDay = new Date();
+  endOfDay.setHours(23, 59, 59, 999);
+  const diffToday = endOfDay - now;
+
+  const endOfMonth = new Date(now.getFullYear(), now.getMonth()+1, 0, 23,59,59,999);
+  const diffMonth = endOfMonth - now;
+
+  const endOfYear = new Date(now.getFullYear(), 11, 31, 23,59,59,999);
+  const diffYear = endOfYear - now;
+
+  const birthDate = new Date(birthYear, 0, 1);
+  const deathDate = new Date(birthDate);
+  deathDate.setFullYear(birthDate.getFullYear() + lifeExpectancy);
+  const diffLife = deathDate - now;
+  const weeksLeft = Math.floor(diffLife / (1000 * 60 * 60 * 24 * 7));
+
+  document.getElementById("today").innerText = format(diffToday);
+  document.getElementById("month").innerText =
+    Math.floor(diffMonth / (1000*60*60*24)) + " DAYS";
+  document.getElementById("year").innerText =
+    Math.floor(diffYear / (1000*60*60*24)) + " DAYS";
+  document.getElementById("life").innerText = weeksLeft;
+}
+
+setInterval(update, 50);
+update();
+</script>
+
+</body>
+</html>
